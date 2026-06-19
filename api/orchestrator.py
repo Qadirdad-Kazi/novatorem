@@ -614,16 +614,12 @@ def catch_all(path: str) -> Response:
     try:
         service_name, service = get_active_service()
     except MusicWidgetError as e:
-        import os
-        debug_msg = f"Vercel Env: ID={'YES' if os.getenv('SPOTIFY_CLIENT_ID') else 'NO'} SEC={'YES' if os.getenv('SPOTIFY_CLIENT_SECRET') else 'NO'} TOK={'YES' if os.getenv('SPOTIFY_REFRESH_TOKEN') else 'NO'}"
-        return make_error_svg(debug_msg, e.status_code)
+        return make_error_svg(e.message, e.status_code)
 
     try:
         track_data = service.get_now_playing()
     except MusicWidgetError as e:
-        import os
-        debug_msg = f"Vercel Env: ID={'YES' if os.getenv('SPOTIFY_CLIENT_ID') else 'NO'} | Error: {str(e.message)}"
-        return make_error_svg(debug_msg, e.status_code)
+        return make_error_svg(e.message, e.status_code)
     except Exception as e:
         return make_error_svg(f"Error: {str(e)}", 500)
 
